@@ -1,5 +1,5 @@
 MMCU=atmega8
-CC=./main.c ./dino.c ./n5110/n5110.c
+CC=./main.c ./dino/dino.c ./n5110/n5110.c
 OBJ=./main.elf
 
 DIST=./dist

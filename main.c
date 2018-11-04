@@ -8,7 +8,7 @@
 #include <string.h>
 #include <avr/eeprom.h>
 #include "./n5110/n5110.h"
-#include "./dino.h"
+#include "./dino/dino.h"
 
 uint16_t max_score_ee EEMEM = 0;
 

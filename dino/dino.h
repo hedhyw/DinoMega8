@@ -2,7 +2,7 @@
 #define __DINO_H__
 
 #include <avr/pgmspace.h>
-#include "./n5110/n5110.h"
+#include "../n5110/n5110.h"
 
 #define DINO_WIDTH 16
 #define DINO_PAGES 3
