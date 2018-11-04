@@ -20,8 +20,14 @@ uint16_t score;
 
 void init()
 {
-  UP_BTN_DDR = UP_BTN_DDR & ~(1 << UP_BTN_PIN); // OUT-mode
+  UP_BTN_DDR = UP_BTN_DDR & ~(1 << UP_BTN_PIN); // IN-mode
   UP_BTN_PORT = 1 << UP_BTN_PIN;                // VCC pull-up
+
+  LIGHT_BTN_DDR = LIGHT_BTN_DDR & ~(1 << LIGHT_BTN_PIN); // IN-mode
+  LIGHT_BTN_PORT = 1 << LIGHT_BTN_PIN;                   // VCC pull-up
+
+  LIGHT_LED_DDR |= 1 << LIGHT_LED_PIN; // OUT-mode
+
   max_score = eeprom_read_word(&max_score_ee);
 
   nlcd_init();
@@ -117,11 +123,26 @@ void start_screen()
 
 int main()
 {
+  register uint8_t light = 0; // off by default
+
   _delay_ms(100);
   init();
 
   while (1)
   {
+    if (LIGHT_BTN_PRESSED())
+    {
+      light ^= 1;
+    }
+    if (light)
+    {
+      LIGHT_LED_ON();
+    }
+    else
+    {
+      LIGHT_LED_OFF();
+    }
+
     pressed = UP_BTN_PRESSED();
     switch (state)
     {
