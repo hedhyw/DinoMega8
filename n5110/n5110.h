@@ -1,17 +1,19 @@
 #ifndef __NOKIA_5110_H__
 #define __NOKIA_5110_H__
 
+#include "../freq.h"
 #include <stdint.h>
-
-#define F_CPU 1000000
+#include <avr/pgmspace.h>
+#include <avr/io.h>
+#include <util/delay.h>
 
 #define PORT_LCD PORTB
 #define DDR_LCD DDRB
-#define LCD_SCE PB2
-#define LCD_RST PB4
-#define LCD_DC PB1
-#define LCD_DIN PB3
-#define LCD_CLK PB5
+#define LCD_SCE PB4
+#define LCD_RST PB5
+#define LCD_DC PB3
+#define LCD_DIN PB2
+#define LCD_CLK PB1
 
 #define LCD_CONTRAST 0x40
 

@@ -1,5 +1,6 @@
 #ifndef __N5110_CHARSER_H__
 #define __N5110_CHARSER_H__
+
 #include <avr/pgmspace.h>
 
 const uint8_t CHARSET[][5] PROGMEM = {

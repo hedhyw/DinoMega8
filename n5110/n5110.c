@@ -1,8 +1,4 @@
 #include "./n5110.h"
-
-#include <avr/pgmspace.h>
-#include <avr/io.h>
-#include <util/delay.h>
 #include "./n5110_chars.h"
 
 struct
@@ -91,8 +87,8 @@ void nlcd_init(void)
   write_cmd(0xC2);
   /* Standard Commands mode, powered down */
   write_cmd(0x20);
-  /* LCD in normal mode */
-  write_cmd(0x09);
+  /* LCD in normal mode. VLCD temperature coefficient 3 */
+  write_cmd(0xB);
 
   /* Clear LCD RAM */
   write_cmd(0x80);

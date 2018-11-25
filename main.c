@@ -1,32 +1,23 @@
 // Atmega8
 #include "./main.h"
-#include <avr/io.h>
-#include <util/delay.h>
-#include <avr/pgmspace.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include <avr/eeprom.h>
-#include "./n5110/n5110.h"
-#include "./dino/dino.h"
 
 uint16_t max_score_ee EEMEM = 0;
 
 char buf[5];      // for formating int
-int8_t pressed;   // UP Button
-int8_t state = 0; // screen
-uint16_t max_score;
-uint16_t score;
+volatile int8_t pressed;   // UP Button
+volatile int8_t state = 0; // screen
+volatile uint16_t max_score;
+volatile uint16_t score;
 
 void init()
 {
-  UP_BTN_DDR = UP_BTN_DDR & ~(1 << UP_BTN_PIN); // IN-mode
-  UP_BTN_PORT = 1 << UP_BTN_PIN;                // VCC pull-up
+  UP_BTN_DDR &= ~(1 << UP_BTN_BIT); // IN-mode
+  UP_BTN_PORT |= 1 << UP_BTN_BIT;    // VCC pull-up
 
-  LIGHT_BTN_DDR = LIGHT_BTN_DDR & ~(1 << LIGHT_BTN_PIN); // IN-mode
-  LIGHT_BTN_PORT = 1 << LIGHT_BTN_PIN;                   // VCC pull-up
+  LIGHT_BTN_DDR &= ~(1 << LIGHT_BTN_BIT); // IN-mode
+  LIGHT_BTN_PORT |= 1 << LIGHT_BTN_BIT;    // VCC pull-up
 
-  LIGHT_LED_DDR |= 1 << LIGHT_LED_PIN; // OUT-mode
+  LIGHT_LED_DDR |= 1 << LIGHT_LED_BIT; // OUT-mode
 
   max_score = eeprom_read_word(&max_score_ee);
 
@@ -36,7 +27,7 @@ void init()
 
 void save_score()
 {
-  eeprom_write_word(&max_score_ee, score);
+  eeprom_write_word(&max_score_ee, max_score);
 }
 
 inline void draw_score(uint8_t pos_x, uint8_t pos_y)
@@ -86,6 +77,9 @@ void game_screen()
 
 void start_screen()
 {
+  nlcd_set_cursor(27, 0);
+  nlcd_write_string("Dino");
+
   nlcd_set_cursor(27, 1);
   nlcd_write_string("start");
 
@@ -94,12 +88,12 @@ void start_screen()
   nlcd_write_string(buf);
 
   nlcd_set_cursor(24, 3);
-  nlcd_write_string("Krivchun M.");
-
-  nlcd_set_cursor(27, 4);
   nlcd_write_string("ENE-151");
 
-  nlcd_set_cursor(27, 5);
+  nlcd_set_cursor(12, 4);
+  nlcd_write_string("Krivchun M.");
+
+  nlcd_set_cursor(30, 5);
   nlcd_write_string("2018");
 
   if (pressed)
@@ -125,14 +119,16 @@ int main()
 {
   register uint8_t light = 0; // off by default
 
-  _delay_ms(100);
+  _delay_ms(300);
   init();
+  _delay_ms(300);
 
   while (1)
   {
     if (LIGHT_BTN_PRESSED())
     {
       light ^= 1;
+      while(LIGHT_BTN_PRESSED());
     }
     if (light)
     {
