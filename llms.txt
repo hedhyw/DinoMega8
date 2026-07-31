@@ -1,0 +1,29 @@
+# DinoMega8
+
+> Chrome-style "Dino" runner game firmware for the ATmega8 microcontroller with a Nokia 5110 (PCD8544) 84x48 LCD. Plain C built with avr-gcc; game logic is hardware-independent and unit tested on the host.
+
+The target runs at 10 MHz from an external crystal (`freq.h`). The LCD is bit-banged on PORTB (SCE=PB4, RST=PB5, D/C=PB3, DIN=PB2, CLK=PB1); the jump button is on PD1 and a backlight toggle button on PD7 (both active low with internal pull-ups), with the backlight LED on PB0. The high score persists in EEPROM. Build with `make`, run host tests with `make test`, flash with `make upload` (avrdude + USBasp).
+
+## Source
+
+- [main.c](main.c): application state machine (start / game / game-over screens), buttons, backlight, EEPROM high score
+- [main.h](main.h): pin assignments and helper macros
+- [freq.h](freq.h): F_CPU definition (10 MHz)
+- [dino/dino.c](dino/dino.c): game logic — dino physics, obstacle movement, collision detection, scoring, sprite data
+- [n5110/n5110.c](n5110/n5110.c): Nokia 5110 LCD driver (bit-banged serial, cursor, text)
+- [n5110/n5110_chars.h](n5110/n5110_chars.h): 5x7 ASCII font in PROGMEM
+
+## Build and CI
+
+- [Makefile](Makefile): avr-gcc build, hex generation, size report, host tests, avrdude upload
+- [.github/workflows/check.yml](.github/workflows/check.yml): CI — host tests, firmware build, hex artifact upload
+- [tests/test_dino.c](tests/test_dino.c): host-side tests for the game logic
+
+## Documentation
+
+- [Readme.md](Readme.md): overview, build/flash instructions, board photo and schematic
+- [AGENTS.md](AGENTS.md): hardware wiring, build/flash/test commands, repo layout
+
+## Optional
+
+- [img_maker/index.py](img_maker/index.py): Python 3 + Pillow tool converting PNG sprites into C byte arrays
