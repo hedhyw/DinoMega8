@@ -3,7 +3,7 @@
 
 uint16_t max_score_ee EEMEM = 0;
 
-char buf[5];      // for formating int
+char buf[7];      // for formating int (worst case: "-32768" + NUL)
 volatile int8_t pressed;   // UP Button
 volatile int8_t state = 0; // screen
 volatile uint16_t max_score;
@@ -30,7 +30,7 @@ void save_score()
   eeprom_write_word(&max_score_ee, max_score);
 }
 
-inline void draw_score(uint8_t pos_x, uint8_t pos_y)
+static void draw_score(uint8_t pos_x, uint8_t pos_y)
 {
   nlcd_set_cursor(pos_x, pos_y);
   score = dino_get_score();
