@@ -13,6 +13,10 @@ AVRDUDE = avrdude
 
 CFLAGS = -Wall -Wextra -std=gnu99 -mmcu=$(MCU) -Os
 
+HOSTCC = gcc
+HOST_CFLAGS = -Wall -Wextra -std=gnu99 -O2 -I tests/stubs
+TEST_BIN = $(DIST)/test_dino
+
 all: build size
 
 build: $(HEX) $(EEPROM)
@@ -32,10 +36,14 @@ $(DIST):
 size: $(ELF)
 	$(SIZE) $(ELF)
 
+test: | $(DIST)
+	$(HOSTCC) $(HOST_CFLAGS) dino/dino.c tests/test_dino.c -o $(TEST_BIN)
+	$(TEST_BIN)
+
 upload: $(HEX) $(EEPROM)
 	$(AVRDUDE) -p $(MCU) -c usbasp -U flash:w:$(HEX):i -U eeprom:w:$(EEPROM):i
 
 clean:
-	rm -f $(ELF) $(HEX) $(EEPROM)
+	rm -f $(ELF) $(HEX) $(EEPROM) $(TEST_BIN)
 
-.PHONY: all build size upload clean
+.PHONY: all build size test upload clean
