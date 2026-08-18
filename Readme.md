@@ -1,5 +1,5 @@
 # Dino game
-![Dino](.assets/dino.png)
+![Dino](.assets/gameplay.gif)
 
 Firmware for **Atmega8A** microcontroller: the Chrome-style Dino runner game
 on a Nokia 5110 (PCD8544) 84x48 LCD. The high score is stored in EEPROM.
