@@ -47,10 +47,22 @@ $(SIM_BIN): sim/sim.c dino/dino.c | $(DIST)
 sim: $(SIM_BIN)
 	$(SIM_BIN)
 
+GIF = .assets/gameplay.gif
+FRAMES = $(DIST)/frames
+
+gif: $(SIM_BIN)
+	rm -rf $(FRAMES) && mkdir -p $(FRAMES)
+	$(SIM_BIN) --record $(FRAMES) 120
+	ffmpeg -y -loglevel error -framerate 16 -i $(FRAMES)/%04d.pgm \
+		-vf palettegen=max_colors=4 -update 1 $(FRAMES)/pal.png
+	ffmpeg -y -loglevel error -framerate 16 -i $(FRAMES)/%04d.pgm \
+		-i $(FRAMES)/pal.png -lavfi paletteuse -loop 0 $(GIF)
+	rm -rf $(FRAMES)
+
 upload: $(HEX) $(EEPROM)
 	$(AVRDUDE) -p $(MCU) -c usbasp -U flash:w:$(HEX):i -U eeprom:w:$(EEPROM):i
 
 clean:
 	rm -f $(ELF) $(HEX) $(EEPROM) $(TEST_BIN) $(SIM_BIN)
 
-.PHONY: all build size test sim upload clean
+.PHONY: all build size test sim gif upload clean
