@@ -42,20 +42,6 @@ The game logic in **dino/dino.c** talks to the display only through
 functions on top of an in-memory framebuffer. The start and game over screens
 from **main.c** are not emulated, `make sim` goes straight into the game.
 
-# Gameplay recording
-
-The emulator can also record a demo of itself (requires `ffmpeg`):
-
-```sh
-make gif
-```
-
-It plays the game with a scripted player and writes **.assets/gameplay.gif**.
-Only the game loop is emulated, so the score, start and game over screens
-from **main.c** are not part of the recording.
-
-![Gameplay](.assets/gameplay.gif)
-
 # Notes
 ## Controls
 - **PD1** button — jump / start game (hold on the start screen to reset the
