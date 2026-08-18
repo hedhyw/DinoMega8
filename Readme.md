@@ -26,6 +26,22 @@ Host-side unit tests for the game logic (no AVR toolchain required):
 make test
 ```
 
+# Emulator
+
+Play the game on your computer, no AVR toolchain and no hardware required:
+
+```sh
+make sim
+```
+
+It renders the 84x48 Nokia 5110 screen in the terminal. Press **space** to
+jump and **q** to quit.
+
+The game logic in **dino/dino.c** talks to the display only through
+`nlcd_set_cursor()` and `write_data()`, so **sim/sim.c** implements those two
+functions on top of an in-memory framebuffer. The start and game over screens
+from **main.c** are not emulated, `make sim` goes straight into the game.
+
 # Notes
 ## Controls
 - **PD1** button — jump / start game (hold on the start screen to reset the
