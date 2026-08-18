@@ -22,6 +22,9 @@ jobs:
       - name: Run host-side tests
         run: make test
 
+      - name: Build emulator
+        run: make dist/sim
+
       - name: Build firmware
         run: make
 
